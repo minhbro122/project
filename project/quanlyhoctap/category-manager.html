@@ -1,355 +1,371 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quản lý môn học</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      margin: 0;
-      background-color: #f8f9fa;
-    }
-    .sidebar {
-      width: 250px;
-      background: #fff;
-      padding: 20px;
-      border-right: 1px solid #ddd;
-      height: 100vh;
-    }
-    .sidebar h2 {
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sidebar a {
-      display: block;
-      padding: 10px;
-      text-decoration: none;
-      color: #333;
-      margin: 5px 0;
-      border-radius: 5px;
-    }
-    .sidebar a.active {
-      background: #007bff;
-      color: white;
-    }
-    .content {
-      flex: 1;
-      padding: 20px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      padding: 10px 20px;
-      border-bottom: 1px solid #ddd;
-    }
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .search-bar select,
-    .search-bar input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .table-container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background: #f1f1f1;
-    }
-    .status-active {
-      color: green;
-      font-weight: bold;
-    }
-    .status-inactive {
-      color: red;
-      font-weight: bold;
-    }
-    .actions i, .actions span {
-      cursor: pointer;
-      margin: 0 5px;
-    }
-    .btn {
-      background: #007bff;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: #0056b3;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      border-radius: 5px;
-      z-index: 999;
-    }
-    .modal.active {
-      display: block;
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý môn học</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            height: 100vh;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .sidebar a.active {
+            background: #007bff;
+            color: white;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input, #filterStatus, #sortOption {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f1f1f1;
+        }
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+        .actions i {
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination a.active {
+            background: #0056b3;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            z-index: 10;
+        }
+        .modal.active {
+            display: block;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>📚 Study Tracker</h2>
-    <a href="#">📊 Thống kê</a>
-    <a href="" class="active">📚 Quản lý môn học</a>
-    <a href="../quanlyhoctap/product-manager.html">📖 Quản lý bài học</a>
-  </div>
-  <div class="content">
-    <div class="header">
-      <h2>Môn học</h2>
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Tìm theo tên..." oninput="searchCourses()" />
-        <select id="filterStatus" onchange="filterCourses()">
-          <option value="all">Lọc theo trạng thái</option>
-          <option value="Đang hoạt động">Đang hoạt động</option>
-          <option value="Ngừng hoạt động">Ngừng hoạt động</option>
-        </select>
-        <select id="sortSelect" onchange="sortCourses()">
-          <option value="default">Sắp xếp</option>
-          <option value="name">Tên A-Z</option>
-          <option value="created">Mới nhất</option>
-        </select>
-        <button class="btn" onclick="openModal()">Thêm mới</button>
-      </div>
+    <div class="sidebar">
+        <h2>📚 Study Tracker</h2>
+        <a href="#">📊 Thống kê</a>
+        <a href="#" class="active">📚 Quản lý môn học</a>
+        <a href="./product-manager.html">📖 Quản lý bài học</a>
     </div>
-    <div class="modal" id="modal">
-      <div class="modal-header">
-        <h3>Thêm mới môn học</h3>
-        <button onclick="closeModal()">✖</button>
-      </div>
-      <label for="courseName">Tên môn học</label>
-      <input type="text" id="courseName" />
-      <p id="error-message" style="color: red; font-size: 14px; display: none;">Tên môn học không được để trống</p>
-      <br />
-      <label>Trạng thái</label>
-      <input type="radio" name="status" value="Đang hoạt động" checked /> Đang hoạt động
-      <input type="radio" name="status" value="Ngừng hoạt động" /> Ngừng hoạt động
-      <br />
-      <div class="modal-footer">
-        <button class="btn" onclick="addCourse()">Lưu</button>
-        <button class="btn" style="background: #6c757d;" onclick="closeModal()">Hủy</button>
-      </div>
+    <div class="content">
+        <div class="header">
+            <h2>Môn học</h2>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm môn học..." onkeyup="renderCourses()">
+                <select id="filterStatus" onchange="renderCourses()">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="Đang hoạt động">Đang hoạt động</option>
+                    <option value="Ngừng hoạt động">Ngừng hoạt động</option>
+                </select>
+                <select id="sortOption" onchange="renderCourses()">
+                    <option value="name">Sắp xếp theo tên</option>
+                    <option value="date">Sắp xếp theo thời gian tạo</option>
+                </select>
+                <button class="btn" onclick="openModal()">Thêm mới</button>
+            </div>
+        </div>
+
+        <!-- Modal thêm / sửa -->
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Thêm mới môn học</h3>
+                <button onclick="closeModal()">✖</button>
+            </div>
+            <label for="courseName">Tên môn học</label>
+            <input type="text" id="courseName">
+            <p id="error-message" style="color: red; font-size: 14px; display: none;">Tên môn học không được để trống</p>
+            <br>
+            <label>Trạng thái</label>
+            <input type="radio" name="status" value="Đang hoạt động" checked> Đang hoạt động
+            <input type="radio" name="status" value="Ngừng hoạt động"> Ngừng hoạt động
+            <br>
+            <div class="modal-footer">
+                <button class="btn" onclick="addOrUpdateCourse()">Lưu</button>
+                <button class="btn" style="background: #6c757d;" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+        <div class="modal" id="confirmDeleteModal">
+            <div class="modal-header">
+                <h3>Xác nhận xoá</h3>
+                <button onclick="closeConfirmDeleteModal()">✖</button>
+            </div>
+            <p>Bạn có chắc muốn xoá môn học này không?</p>
+            <div class="modal-footer">
+                <button class="btn" onclick="confirmDeleteCourse()">Xoá</button>
+                <button class="btn" style="background: #6c757d;" onclick="closeConfirmDeleteModal()">Hủy</button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên môn học</th>
+                        <th>Trạng thái</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="courseTable"></tbody>
+            </table>
+            <div class="pagination" id="pagination"></div>
+        </div>
     </div>
 
-    <!-- Modal xác nhận xóa -->
-    <div class="modal" id="confirmDeleteModal">
-      <div class="modal-header">
-        <h3>Xác nhận xóa</h3>
-        <button onclick="closeConfirmModal()">✖</button>
-      </div>
-      <p>Bạn có chắc muốn xóa môn học này?</p>
-      <div class="modal-footer">
-        <button class="btn" style="background: red;" onclick="confirmDelete()">Xóa</button>
-        <button class="btn" onclick="closeConfirmModal()">Hủy</button>
-      </div>
-    </div>
+    <script>
+        const modal = document.getElementById("modal");
+        const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const courseNameInput = document.getElementById("courseName");
+        const statusInputs = document.getElementsByName("status");
+        const errorMessage = document.getElementById("error-message");
+        const toast = document.getElementById("toast");
+        const searchInput = document.getElementById("searchInput");
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Tên môn học</th>
-            <th>Trạng thái</th>
-            <th>Chức năng</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+        let courses = JSON.parse(localStorage.getItem("courses") || "[]");
+        let editingIndex = null;
+        let deleteIndex = null;
+        let currentPage = 1;
+        const itemsPerPage = 5;
 
-  <script>
-    let currentRow = null;
-    let rowToDelete = null;
+        function showToast(message) {
+            toast.innerText = message;
+            toast.style.display = "block";
+            setTimeout(() => toast.style.display = "none", 2000);
+        }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      loadCoursesFromLocal();
-    });
+        function openModal(index = null) {
+            editingIndex = index;
+            errorMessage.style.display = "none";
+            if (index !== null) {
+                const course = courses[index];
+                courseNameInput.value = course.name;
+                statusInputs.forEach(input => input.checked = input.value === course.status);
+                modalTitle.innerText = "Cập nhật môn học";
+            } else {
+                courseNameInput.value = "";
+                statusInputs[0].checked = true;
+                modalTitle.innerText = "Thêm mới môn học";
+            }
+            modal.classList.add("active");
+        }
 
-    function openModal(mode = "add", element = null) {
-      document.getElementById("error-message").style.display = "none";
-      const modal = document.getElementById("modal");
-      const title = modal.querySelector(".modal-header h3");
-      const nameInput = document.getElementById("courseName");
-      const statusInputs = document.getElementsByName("status");
+        function closeModal() {
+            modal.classList.remove("active");
+        }
 
-      if (mode === "edit" && element) {
-        currentRow = element.closest("tr");
-        nameInput.value = currentRow.cells[0].innerText;
-        const status = currentRow.cells[1].innerText.includes("Đang") ? "Đang hoạt động" : "Ngừng hoạt động";
-        statusInputs.forEach(i => i.checked = i.value === status);
-        title.innerText = "Cập nhật môn học";
-      } else {
-        currentRow = null;
-        nameInput.value = "";
-        statusInputs[0].checked = true;
-        title.innerText = "Thêm mới môn học";
-      }
+        function addOrUpdateCourse() {
+            const name = courseNameInput.value.trim();
+            if (!name) {
+                errorMessage.style.display = "block";
+                return;
+            }
+            const status = [...statusInputs].find(i => i.checked).value;
+            const timestamp = new Date().getTime();
 
-      modal.classList.add("active");
-    }
+            if (editingIndex !== null) {
+                courses[editingIndex].name = name;
+                courses[editingIndex].status = status;
+                showToast("Cập nhật môn học thành công");
+            } else {
+                courses.push({ name, status, createdAt: timestamp });
+                showToast("Thêm môn học thành công");
+            }
 
-    function closeModal() {
-      document.getElementById("modal").classList.remove("active");
-    }
+            localStorage.setItem("courses", JSON.stringify(courses));
+            closeModal();
+            renderCourses();
+        }
 
-    function addCourse() {
-      const name = document.getElementById("courseName").value.trim();
-      const status = [...document.getElementsByName("status")].find(i => i.checked).value;
-      const statusClass = status === "Đang hoạt động" ? "status-active" : "status-inactive";
-      const statusText = status === "Đang hoạt động" ? "🟢 Đang hoạt động" : "🔴 Ngừng hoạt động";
+        function openConfirmDeleteModal(index) {
+            deleteIndex = index;
+            confirmDeleteModal.classList.add("active");
+        }
 
-      if (!name) {
-        document.getElementById("error-message").style.display = "block";
-        return;
-      }
+        function closeConfirmDeleteModal() {
+            confirmDeleteModal.classList.remove("active");
+        }
 
-      document.getElementById("error-message").style.display = "none";
+        function confirmDeleteCourse() {
+            courses.splice(deleteIndex, 1);
+            localStorage.setItem("courses", JSON.stringify(courses));
+            closeConfirmDeleteModal();
+            renderCourses();
+            showToast("Xoá môn học thành công");
+        }
 
-      if (currentRow) {
-        currentRow.cells[0].innerText = name;
-        currentRow.cells[1].innerHTML = statusText;
-        currentRow.cells[1].className = statusClass;
-      } else {
-        const row = document.createElement("tr");
-        row.setAttribute("data-created-at", Date.now());
-        row.innerHTML = `
-          <td>${name}</td>
-          <td class="${statusClass}">${statusText}</td>
-          <td class="actions">
-            <span onclick="openModal('edit', this)">✎</span>
-            <span onclick="deleteCourse(this)">🗑️</span>
-          </td>`;
-        document.querySelector("tbody").appendChild(row);
-      }
+        function renderCourses() {
+            const tbody = document.getElementById("courseTable");
+            tbody.innerHTML = "";
+            const filterStatus = document.getElementById("filterStatus").value;
+            const sortOption = document.getElementById("sortOption").value;
+            const keyword = searchInput.value.toLowerCase();
 
-      saveCoursesToLocal();
-      closeModal();
-    }
+            let filtered = courses.filter(course =>
+                (filterStatus === "all" || course.status === filterStatus) &&
+                course.name.toLowerCase().includes(keyword)
+            );
 
-    function deleteCourse(element) {
-      rowToDelete = element.closest("tr");
-      document.getElementById("confirmDeleteModal").classList.add("active");
-    }
+            if (sortOption === "name") {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else {
+                filtered.sort((a, b) => b.createdAt - a.createdAt);
+            }
 
-    function confirmDelete() {
-      if (rowToDelete) {
-        rowToDelete.remove();
-        saveCoursesToLocal();
-      }
-      closeConfirmModal();
-    }
+            const start = (currentPage - 1) * itemsPerPage;
+            const paginated = filtered.slice(start, start + itemsPerPage);
 
-    function closeConfirmModal() {
-      rowToDelete = null;
-      document.getElementById("confirmDeleteModal").classList.remove("active");
-    }
+            paginated.forEach((course, index) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${course.name}</td>
+                    <td class="${course.status === 'Đang hoạt động' ? 'status-active' : 'status-inactive'}">
+                        ${course.status === 'Đang hoạt động' ? '🟢 Đang hoạt động' : '🔴 Ngừng hoạt động'}
+                    </td>
+                    <td>
+                        <span onclick="openModal(${courses.indexOf(course)})">✎</span>
+                        <span onclick="openConfirmDeleteModal(${courses.indexOf(course)})">🗑️</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
 
-    function filterCourses() {
-      const value = document.getElementById("filterStatus").value;
-      document.querySelectorAll("tbody tr").forEach(row => {
-        const show = value === "all" || row.cells[1].innerText.includes(value);
-        row.style.display = show ? "" : "none";
-      });
-    }
+            renderPagination(filtered.length);
+        }
 
-    function searchCourses() {
-      const value = document.getElementById("searchInput").value.toLowerCase();
-      document.querySelectorAll("tbody tr").forEach(row => {
-        const name = row.cells[0].innerText.toLowerCase();
-        row.style.display = name.includes(value) ? "" : "none";
-      });
-    }
+        function renderPagination(totalItems) {
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    function sortCourses() {
-      const value = document.getElementById("sortSelect").value;
-      const tbody = document.querySelector("tbody");
-      const rows = Array.from(tbody.querySelectorAll("tr"));
+            for (let i = 1; i <= totalPages; i++) {
+                const a = document.createElement("a");
+                a.textContent = i;
+                if (i === currentPage) a.classList.add("active");
+                a.onclick = () => { currentPage = i; renderCourses(); };
+                pagination.appendChild(a);
+            }
+        }
 
-      if (value === "name") {
-        rows.sort((a, b) => a.cells[0].innerText.localeCompare(b.cells[0].innerText));
-      } else if (value === "created") {
-        rows.sort((a, b) => b.getAttribute("data-created-at") - a.getAttribute("data-created-at"));
-      }
-
-      tbody.innerHTML = "";
-      rows.forEach(r => tbody.appendChild(r));
-    }
-
-    function saveCoursesToLocal() {
-      const data = Array.from(document.querySelectorAll("tbody tr")).map(row => ({
-        name: row.cells[0].innerText,
-        status: row.cells[1].innerText.includes("Đang") ? "Đang hoạt động" : "Ngừng hoạt động",
-        createdAt: row.getAttribute("data-created-at") || Date.now()
-      }));
-      localStorage.setItem("courses", JSON.stringify(data));
-    }
-
-    function loadCoursesFromLocal() {
-      const saved = localStorage.getItem("courses");
-      if (!saved) return;
-      const data = JSON.parse(saved);
-      const tbody = document.querySelector("tbody");
-      tbody.innerHTML = "";
-
-      data.forEach(course => {
-        const statusClass = course.status === "Đang hoạt động" ? "status-active" : "status-inactive";
-        const statusText = course.status === "Đang hoạt động" ? "🟢 Đang hoạt động" : "🔴 Ngừng hoạt động";
-        const row = document.createElement("tr");
-        row.setAttribute("data-created-at", course.createdAt);
-        row.innerHTML = `
-          <td>${course.name}</td>
-          <td class="${statusClass}">${statusText}</td>
-          <td class="actions">
-            <span onclick="openModal('edit', this)">✎</span>
-            <span onclick="deleteCourse(this)">🗑️</span>
-          </td>`;
-        tbody.appendChild(row);
-      });
-    }
-  </script>
+        renderCourses();
+    </script>
 </body>
 </html>
