@@ -5,36 +5,42 @@ body {
     height: 100vh;
     background-color: #f8f9fa;
     font-family: Arial, sans-serif;
-}
-.login-container {
+  }
+
+  .login-container {
     background: #fff;
     padding: 40px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 350px;
-}
-h2 {
+  }
+
+  h2 {
     margin-bottom: 10px;
-}
-p {
+  }
+
+  p {
     color: #666;
     margin-bottom: 20px;
-}
-input {
+  }
+
+  input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-.remember {
+  }
+
+  .remember {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 14px;
     margin-bottom: 20px;
-}
-.login-btn {
+  }
+
+  .login-btn {
     width: 100%;
     background: #007bff;
     color: white;
@@ -42,23 +48,41 @@ input {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-.login-btn:hover {
+  }
+
+  .login-btn:hover {
     background: #0056b3;
-}
-.register-link {
+  }
+
+  .register-link {
     margin-top: 15px;
     font-size: 14px;
-}
-.register-link a {
+  }
+
+  .register-link a {
     color: #007bff;
     text-decoration: none;
-}
-.register-link a:hover {
+  }
+
+  .register-link a:hover {
     text-decoration: underline;
-}
-@media (max-width:768px) {
-    .login-container{
-        text-align: center;
+  }
+
+  .error-msg {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+
+  .success-msg {
+    color: green;
+    font-size: 14px;
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .login-container {
+      text-align: center;
     }
-}
+  }

@@ -1,110 +1,200 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý bài học</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    margin: 0;
-    background-color: #f8f9fa;
-}
-.sidebar {
-    width: 250px;
-    background: #fff;
-    padding: 20px;
-    border-right: 1px solid #ddd;
-    height: 100vh;
-}
-.sidebar h2 {
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.sidebar a {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: #333;
-    margin: 5px 0;
-    border-radius: 5px;
-}
-.sidebar a.active {
-    background: #007bff;
-    color: white;
-}
-.content {
-    flex: 1;
-    padding: 20px;
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-}
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.user-info img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-.table-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-th {
-    background: #f1f1f1;
-}
-.status-complete {
-    color: green;
-    font-weight: bold;
-}
-.status-incomplete {
-    color: red;
-    font-weight: bold;
-}
-.actions i {
-    cursor: pointer;
-    margin: 0 5px;
-}
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-.pagination a {
-    padding: 8px 12px;
-    margin: 0 5px;
-    text-decoration: none;
-    background: #007bff;
-    color: white;
-    border-radius: 5px;
-}
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .sidebar a.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info button {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            width: 150px;
+            height: 35px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f1f1f1;
+        }
+
+        .status-complete {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-incomplete {
+            color: red;
+            font-weight: bold;
+        }
+
+        .actions i {
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            text-decoration: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 400px;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .modal label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .modal input,
+        .modal select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal span {
+            color: red;
+            font-size: 12px;
+        }
+
+        .modal button {
+            margin-top: 15px;
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .modal button:first-of-type {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .modal button:last-of-type {
+            background: #ccc;
+            color: black;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <h2>📚 Study Tracker</h2>
@@ -116,11 +206,62 @@ th {
         <div class="header">
             <h2>Bài học</h2>
             <div class="user-info">
-                <button>Thêm mới bài học</button>
+                <button onclick="openModal()">Thêm mới bài học</button>
                 <span>Xin chào,</span>
-                <img src="https://static.vecteezy.com/system/resources/previews/009/749/827/original/man-avatar-icon-cartoon-male-profile-mascot-illustration-face-business-user-logo-free-vector.jpg" alt="">
+                <img src="https://static.vecteezy.com/system/resources/previews/009/749/827/original/man-avatar-icon-cartoon-male-profile-mascot-illustration-face-business-user-logo-free-vector.jpg"
+                    alt="">
             </div>
         </div>
+
+        <div class="modal" id="lessonModal">
+            <h3>Thêm mới bài học</h3>
+            <label>Môn học:</label>
+            <select id="courseName">
+                <option value="">Chọn môn học</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="C">C</option>
+            </select>
+            <span id="courseError" style="display:none;">Vui lòng chọn môn học</span>
+
+            <label>Tên bài học:</label>
+            <input type="text" id="lessonName">
+            <span id="nameError" style="display:none;">Tên bài học không được để trống</span>
+
+            <label>Thời gian học (phút):</label>
+            <input type="number" id="lessonTime">
+            <span id="timeError" style="display:none;">Thời gian học không được để trống</span>
+
+            <label>Trạng thái:</label>
+            <select id="lessonStatus">
+                <option value="true">Đã hoàn thành</option>
+                <option value="false">Chưa hoàn thành</option>
+            </select>
+            <button onclick="addLesson()">Thêm</button>
+            <button onclick="closeModal()">Hủy</button>
+        </div>
+        <div class="modal" id="editLessonModal">
+            <h3>Cập nhật bài học</h3>
+
+            <input type="hidden" id="editLessonIndex">
+
+            <label>Tên bài học:</label>
+            <input type="text" id="editLessonName">
+
+            <label>Thời gian học (phút):</label>
+            <input type="number" id="editLessonTime">
+
+            <label>Trạng thái:</label>
+            <select id="editLessonStatus">
+                <option value="true">Đã hoàn thành</option>
+                <option value="false">Chưa hoàn thành</option>
+            </select>
+
+            <button onclick="updateLesson()">Lưu</button>
+            <button onclick="closeEditModal()">Hủy</button>
+        </div>
+
         <div class="table-container">
             <table>
                 <thead>
@@ -155,7 +296,11 @@ th {
                                 <td>Session ${index + 1} - ${lesson[0]}</td>
                                 <td>${lesson[1]}</td>
                                 <td class="${lesson[2] ? 'status-complete' : 'status-incomplete'}">${lesson[2] ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành'}</td>
-                                <td class="actions">✏️ 🗑️</td>
+                                <td class="actions">
+    <span class="edit-icon" onclick="openEditModal(this)" data-index="${index}">✎</span>
+    <span class="delete-icon" onclick="deleteLesson(this)">🗑️</span>
+</td>
+
                             </tr>`);
                         });
                     </script>
@@ -172,7 +317,73 @@ th {
         </div>
     </div>
     <script>
-        
+        function openModal() {
+            document.getElementById("lessonModal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("lessonModal").classList.remove("active");
+        }
+
+        function addLesson() {
+            let course = document.getElementById("courseName").value;
+            let name = document.getElementById("lessonName").value.trim();
+            let time = document.getElementById("lessonTime").value.trim();
+
+            let courseError = document.getElementById("courseError");
+            let nameError = document.getElementById("nameError");
+            let timeError = document.getElementById("timeError");
+
+            courseError.style.display = course ? "none" : "block";
+            nameError.style.display = name ? "none" : "block";
+            timeError.style.display = time ? "none" : "block";
+
+            if (!course || !name || !time) {
+                return;
+            }
+
+
+            closeModal();
+        }
+        function openEditModal(element) {
+            let index = element.getAttribute("data-index");
+            let lesson = lessons[index];
+
+            document.getElementById("editLessonIndex").value = index;
+            document.getElementById("editLessonName").value = lesson[0];
+            document.getElementById("editLessonTime").value = lesson[1];
+            document.getElementById("editLessonStatus").value = lesson[2] ? "true" : "false";
+
+            document.getElementById("editLessonModal").classList.add("active");
+        }
+        function closeEditModal() {
+            document.getElementById("editLessonModal").classList.remove("active");
+        }
+        function updateLesson() {
+            let index = document.getElementById("editLessonIndex").value;
+            let name = document.getElementById("editLessonName").value.trim();
+            let time = document.getElementById("editLessonTime").value.trim();
+            let status = document.getElementById("editLessonStatus").value === "true";
+
+            if (!name || !time) return alert("Vui lòng nhập đầy đủ thông tin!");
+
+            lessons[index] = [name, parseInt(time), status];
+
+            let rows = document.querySelectorAll("tbody tr");
+            rows[index].children[0].innerText = name;
+            rows[index].children[1].innerText = time;
+            rows[index].children[2].innerHTML = status ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành';
+            rows[index].children[2].className = status ? "status-complete" : "status-incomplete";
+
+            closeEditModal();
+        }
+        function deleteLesson(element) {
+            let index = element.getAttribute("data-index");
+            lessons.splice(index, 1);
+            renderTable();
+        }
+
     </script>
 </body>
+
 </html>
