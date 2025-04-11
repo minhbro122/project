@@ -276,16 +276,28 @@
             const name = courseNameInput.value.trim();
             if (!name) {
                 errorMessage.style.display = "block";
+                errorMessage.textContent = "Tên môn học không được để trống";
                 return;
             }
+
+            // Kiểm tra trùng lặp tên môn học
+            const isDuplicate = courses.some((course, index) => course.name.toLowerCase() === name.toLowerCase() && index !== editingIndex);
+            if (isDuplicate) {
+                errorMessage.style.display = "block";
+                errorMessage.textContent = "Tên môn học đã tồn tại";
+                return;
+            }
+
             const status = [...statusInputs].find(i => i.checked).value;
             const timestamp = new Date().getTime();
 
             if (editingIndex !== null) {
+                // Cập nhật môn học
                 courses[editingIndex].name = name;
                 courses[editingIndex].status = status;
                 showToast("Cập nhật môn học thành công");
             } else {
+                // Thêm mới môn học
                 courses.push({ name, status, createdAt: timestamp });
                 showToast("Thêm môn học thành công");
             }
