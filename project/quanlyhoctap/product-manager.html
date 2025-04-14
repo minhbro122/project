@@ -120,16 +120,27 @@
         .pagination {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin-top: 20px;
         }
 
-        .pagination a {
+        .pagination button {
             padding: 8px 12px;
             margin: 0 5px;
-            text-decoration: none;
+            border: none;
             background: #007bff;
             color: white;
             border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button:hover {
+            background: #0056b3;
+        }
+
+        .pagination span {
+            font-size: 16px;
+            margin: 0 10px;
         }
 
         .modal {
@@ -192,6 +203,26 @@
             background: #ccc;
             color: black;
         }
+
+        .search-sort {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .search-sort input {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-sort select {
+            width: 35%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -211,6 +242,15 @@
                 <img src="https://static.vecteezy.com/system/resources/previews/009/749/827/original/man-avatar-icon-cartoon-male-profile-mascot-illustration-face-business-user-logo-free-vector.jpg"
                     alt="">
             </div>
+        </div>
+
+        <div class="search-sort">
+            <input type="text" id="searchInput" placeholder="Tìm kiếm bài học..." oninput="searchLessons()">
+            <select id="sortOption" onchange="sortLessons()">
+                <option value="name">Sắp xếp theo tên</option>
+                <option value="time">Sắp xếp theo thời gian học</option>
+                <option value="status">Sắp xếp theo trạng thái</option>
+            </select>
         </div>
 
         <div class="modal" id="lessonModal">
@@ -273,50 +313,92 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <script>
-                        let lessons = [
-                            ["Tổng quan về HTML", 45, true],
-                            ["Thẻ Inline và Block", 60, false],
-                            ["Form và Table", 40, true],
-                            ["CSS cơ bản", 45, false],
-                            ["CSS layout", 60, false],
-                            ["CSS Flex box", 45, false],
-                            ["CSS Grid", 50, true],
-                            ["JavaScript cơ bản", 60, false],
-                            ["ES6 và cú pháp hiện đại", 50, true],
-                            ["DOM manipulation", 55, false],
-                            ["Event handling trong JS", 45, false],
-                            ["Con trỏ trong C", 45, true],
-                            ["Đọc và ghi file", 60, false],
-                            ["Lập trình hướng đối tượng", 50, true],
-                            ["Tối ưu hiệu suất web", 55, false]
-                        ];
-                        lessons.forEach((lesson, index) => {
-                            document.write(`<tr>
-                                <td>Session ${index + 1} - ${lesson[0]}</td>
-                                <td>${lesson[1]}</td>
-                                <td class="${lesson[2] ? 'status-complete' : 'status-incomplete'}">${lesson[2] ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành'}</td>
-                                <td class="actions">
-    <span class="edit-icon" onclick="openEditModal(this)" data-index="${index}">✎</span>
-    <span class="delete-icon" onclick="deleteLesson(this)">🗑️</span>
-</td>
-
-                            </tr>`);
-                        });
-                    </script>
                 </tbody>
             </table>
         </div>
         <div class="pagination">
-            <a href="#">⬅️</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#" class="active">3</a>
-            <a href="#">4</a>
-            <a href="#">➡️</a>
+            <button onclick="changePage('prev')">⬅️</button>
+            <span id="currentPage">1</span>
+            <button onclick="changePage('next')">➡️</button>
         </div>
     </div>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const lessons = JSON.parse(localStorage.getItem("lessons")) || [];
+            const tableBody = document.querySelector("tbody");
+            const searchInput = document.getElementById("searchInput");
+            const sortOption = document.getElementById("sortOption");
+            const currentPageSpan = document.getElementById("currentPage");
+
+            let currentPage = 1;
+            const itemsPerPage = 5;
+
+            // Hàm hiển thị danh sách bài học
+            function renderTable(filteredLessons = lessons) {
+                tableBody.innerHTML = ""; // Xóa nội dung cũ
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const paginatedLessons = filteredLessons.slice(start, end);
+
+                paginatedLessons.forEach((lesson, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${lesson.name}</td>
+                        <td>${lesson.time}</td>
+                        <td class="${lesson.status ? 'status-complete' : 'status-incomplete'}">
+                            ${lesson.status ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành'}
+                        </td>
+                        <td class="actions">
+                            <span class="edit-icon" onclick="openEditModal(${index})">✎</span>
+                            <span class="delete-icon" onclick="deleteLesson(${index})">🗑️</span>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Hàm tìm kiếm bài học
+            window.searchLessons = function () {
+                const searchValue = searchInput.value.toLowerCase();
+                const filteredLessons = lessons.filter(lesson =>
+                    lesson.name.toLowerCase().includes(searchValue)
+                );
+                currentPage = 1; // Reset về trang đầu
+                renderTable(filteredLessons);
+            };
+
+            // Hàm sắp xếp bài học
+            window.sortLessons = function () {
+                const sortValue = sortOption.value;
+                lessons.sort((a, b) => {
+                    if (sortValue === "name") {
+                        return a.name.localeCompare(b.name);
+                    } else if (sortValue === "time") {
+                        return a.time - b.time;
+                    } else if (sortValue === "status") {
+                        return a.status === b.status ? 0 : a.status ? -1 : 1;
+                    }
+                });
+                currentPage = 1; // Reset về trang đầu
+                renderTable();
+            };
+
+            // Hàm thay đổi trang
+            window.changePage = function (direction) {
+                const totalPages = Math.ceil(lessons.length / itemsPerPage);
+                if (direction === "prev" && currentPage > 1) {
+                    currentPage--;
+                } else if (direction === "next" && currentPage < totalPages) {
+                    currentPage++;
+                }
+                currentPageSpan.textContent = currentPage;
+                renderTable();
+            };
+
+            // Tải danh sách bài học khi trang được tải
+            renderTable();
+        });
+
         function openModal() {
             document.getElementById("lessonModal").classList.add("active");
         }
@@ -325,64 +407,87 @@
             document.getElementById("lessonModal").classList.remove("active");
         }
 
-        function addLesson() {
-            let course = document.getElementById("courseName").value;
-            let name = document.getElementById("lessonName").value.trim();
-            let time = document.getElementById("lessonTime").value.trim();
-
-            let courseError = document.getElementById("courseError");
-            let nameError = document.getElementById("nameError");
-            let timeError = document.getElementById("timeError");
-
-            courseError.style.display = course ? "none" : "block";
-            nameError.style.display = name ? "none" : "block";
-            timeError.style.display = time ? "none" : "block";
-
-            if (!course || !name || !time) {
-                return;
-            }
-
-
-            closeModal();
-        }
-        function openEditModal(element) {
-            let index = element.getAttribute("data-index");
-            let lesson = lessons[index];
-
-            document.getElementById("editLessonIndex").value = index;
-            document.getElementById("editLessonName").value = lesson[0];
-            document.getElementById("editLessonTime").value = lesson[1];
-            document.getElementById("editLessonStatus").value = lesson[2] ? "true" : "false";
-
-            document.getElementById("editLessonModal").classList.add("active");
-        }
         function closeEditModal() {
             document.getElementById("editLessonModal").classList.remove("active");
         }
-        function updateLesson() {
-            let index = document.getElementById("editLessonIndex").value;
-            let name = document.getElementById("editLessonName").value.trim();
-            let time = document.getElementById("editLessonTime").value.trim();
-            let status = document.getElementById("editLessonStatus").value === "true";
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const courses = JSON.parse(localStorage.getItem("courses")) || [];
+            const courseModal = document.getElementById("courseModal");
+            const courseNameInput = document.getElementById("courseNameInput");
+            const courseNameError = document.getElementById("courseNameError");
+            const courseModalTitle = document.getElementById("courseModalTitle");
+            let editingCourseIndex = null;
 
-            if (!name || !time) return alert("Vui lòng nhập đầy đủ thông tin!");
+            // Hàm hiển thị danh sách môn học
+            function renderCourses() {
+                const courseList = document.getElementById("courseList");
+                courseList.innerHTML = ""; // Xóa nội dung cũ
+                courses.forEach((course, index) => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        ${course}
+                        <button onclick="editCourse(${index})">Sửa</button>
+                        <button onclick="deleteCourse(${index})">Xóa</button>
+                    `;
+                    courseList.appendChild(listItem);
+                });
+            }
 
-            lessons[index] = [name, parseInt(time), status];
+            // Hàm mở modal thêm môn học
+            window.openAddCourseModal = function () {
+                courseModalTitle.textContent = "Thêm mới môn học";
+                courseNameInput.value = "";
+                editingCourseIndex = null;
+                courseModal.classList.add("active");
+            };
 
-            let rows = document.querySelectorAll("tbody tr");
-            rows[index].children[0].innerText = name;
-            rows[index].children[1].innerText = time;
-            rows[index].children[2].innerHTML = status ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành';
-            rows[index].children[2].className = status ? "status-complete" : "status-incomplete";
+            // Hàm mở modal chỉnh sửa môn học
+            window.editCourse = function (index) {
+                courseModalTitle.textContent = "Cập nhật môn học";
+                courseNameInput.value = courses[index];
+                editingCourseIndex = index;
+                courseModal.classList.add("active");
+            };
 
-            closeEditModal();
-        }
-        function deleteLesson(element) {
-            let index = element.getAttribute("data-index");
-            lessons.splice(index, 1);
-            renderTable();
-        }
+            // Hàm lưu môn học
+            window.saveCourse = function () {
+                const courseName = courseNameInput.value.trim();
+                if (!courseName) {
+                    courseNameError.style.display = "block";
+                    return;
+                }
+                courseNameError.style.display = "none";
 
+                if (editingCourseIndex !== null) {
+                    // Cập nhật môn học
+                    courses[editingCourseIndex] = courseName;
+                } else {
+                    // Thêm mới môn học
+                    courses.push(courseName);
+                }
+
+                localStorage.setItem("courses", JSON.stringify(courses));
+                renderCourses();
+                closeCourseModal();
+            };
+
+            // Hàm xóa môn học
+            window.deleteCourse = function (index) {
+                courses.splice(index, 1);
+                localStorage.setItem("courses", JSON.stringify(courses));
+                renderCourses();
+            };
+
+            // Hàm đóng modal
+            window.closeCourseModal = function () {
+                courseModal.classList.remove("active");
+            };
+
+            // Hiển thị danh sách môn học khi trang được tải
+            renderCourses();
+        });
     </script>
 </body>
 
